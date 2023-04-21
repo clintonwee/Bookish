@@ -24,6 +24,21 @@ def bookish_routes(app):
                 } for book in all_books]
             return {"books": results}
 
+    @app.route('/book/<id>', methods=['GET'])
+    def get_book(id):
+        if request.method == 'GET':
+            book = Book.query.get(id)
+            result = {
+                    'id': book.id,
+                    'title': book.title,
+                    'author': book.author,
+                    'isbn': book.isbn,
+                    'genre': book.genre,
+                    'total': book.total,
+                    'available':book.available
+                }
+            return {"book": result}
+
     @app.route('/book', methods=['POST'])
     def create_book():
         if request.method == 'POST':
