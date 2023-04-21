@@ -1,7 +1,7 @@
 
 const Navbar = () => {
     return(
-        <nav className="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
+        <nav className="w-full bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                 <a href="#" className="flex items-center">
                     <img src="/bookish-icon.png" className="h-8 mr-3" alt="Flowbite Logo"/>

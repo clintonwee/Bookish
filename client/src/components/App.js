@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Container } from "reactstrap";
-import { HomePage } from "./homePage/HomePage";
+import  HomePage  from "./homePage/HomePage";
 import { ApiService } from "./ApiService";
 import { Routes, Route } from "react-router-dom"
 import LoginPage from "./loginPage/LoginPage";
