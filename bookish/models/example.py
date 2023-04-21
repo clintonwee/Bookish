@@ -4,9 +4,10 @@ book_loan = db.Table('book_loan',
                      db.Column('book_id', db.Integer, db.ForeignKey('book.id')),
                      db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
                      )
+
 class Book(db.Model):
     # This sets the name of the table in the database
-    __tablename__ = 'Books'
+    __tablename__ = 'book'
 
     # Here we outline what columns we want in our database
     id = db.Column(db.Integer, primary_key=True)
@@ -42,7 +43,7 @@ class Book(db.Model):
 
 class User(db.Model):
     # This sets the name of the table in the database
-    __tablename__ = 'Users'
+    __tablename__ = 'user'
 
     # Here we outline what columns we want in our database
     id = db.Column(db.Integer, primary_key=True)
@@ -50,7 +51,7 @@ class User(db.Model):
     last_name = db.Column(db.String())
     age = db.Column(db.Integer)
     email = db.Column(db.String())
-    loans = db.relationship('Book', secondary=book_loan, backref="users")
+    loans = db.relationship('Book', secondary=book_loan, backref="user")
 
     def __init__(self, first_name, last_name, age, email):
         self.first_name = first_name

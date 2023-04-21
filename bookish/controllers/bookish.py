@@ -8,6 +8,34 @@ def bookish_routes(app):
     def health_check():
         return {"status": "OK"}
 
+    @app.route('/books', methods=['GET'])
+    def get_all_books():
+        if request.method == 'GET':
+            all_books = Book.query.all()
+            results = [
+                {
+                    'id': book.id,
+                    'title': book.title,
+                    'author': book.author,
+                    'isbn': book.isbn,
+                    'genre': book.genre,
+                    'total': book.total,
+                    'available':book.available
+                } for book in all_books]
+            return {"books": results}
+
+    @app.route('/book', methods=['POST'])
+    def create_book():
+        if request.method == 'POST':
+            if request.is_json:
+                data = request.get_json()
+                new_book = Book(title=data['title'], author=data['author'], genre=data['genre'], isbn=data['isbn'], total=data['total'], available=data['available'])
+                db.session.add(new_book)
+                db.session.commit()
+                return {"message": "New book has been created successfully."}
+            else:
+                return {"error": "The request payload is not in JSON format"}
+
     @app.route('/example', methods=['POST', 'GET'])
     def handle_example():
         if request.method == 'POST':
