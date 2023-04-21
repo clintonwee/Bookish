@@ -22,27 +22,25 @@ def user_routes(app):
     @app.route('/user/<id>', methods=['GET'])
     def get_user(id):
         if request.method == 'GET':
-            book = Book.query.get(id)
+            user = User.query.get(id)
             result = {
-                    'id': book.id,
-                    'title': book.title,
-                    'author': book.author,
-                    'isbn': book.isbn,
-                    'genre': book.genre,
-                    'total': book.total,
-                    'available':book.available
+                    'id': user.id,
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
+                    'age': user.age,
+                    'email': user.email
                 }
-            return {"book": result}
+            return {"user": result}
 
     @app.route('/user', methods=['POST'])
     def create_user():
         if request.method == 'POST':
             if request.is_json:
                 data = request.get_json()
-                new_book = Book(title=data['title'], author=data['author'], genre=data['genre'], isbn=data['isbn'], total=data['total'], available=data['available'])
-                db.session.add(new_book)
+                new_user = User(first_name=data['first_name'], last_name=data['last_name'], age=data['age'], email=data['email'])
+                db.session.add(new_user)
                 db.session.commit()
-                return {"message": "New book has been created successfully."}
+                return {"message": "New User has been created successfully."}
             else:
                 return {"error": "The request payload is not in JSON format"}
 
@@ -51,13 +49,11 @@ def user_routes(app):
         if request.method == 'PUT':
             if request.is_json:
                 data = request.get_json()
-                book = Book.query.get(id)
-                book.title = data['title']
-                book.author = data['author']
-                book.genre = data['genre']
-                book.isbn = data['isbn']
-                book.total = data['total']
-                book.available = data['available']
+                user = User.query.get(id)
+                user.first_name = data['first_name']
+                user.last_name = data['last_name']
+                user.age = data['age']
+                user.email = data['email']
 
                 db.session.commit()
                 return {"message": "Book has been edited successsfully."}
