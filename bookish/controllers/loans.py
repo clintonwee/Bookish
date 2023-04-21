@@ -13,9 +13,17 @@ def loan_routes(app):
                 due_date = date.today() + timedelta(days=14)
                 user = User.query.get(data['user_id'])
                 book = Book.query.get(data['book_id'])
-                db.session.add(Loan(user_id=user.id, book_id=book.id, due_date=due_date))
-                db.session.commit()
-                return {"message": "New Loan has been created successfully."}
+
+                if book.available == 0:
+                    return {
+                        "status": "failed",
+                        "message": "No books available"
+                    }
+                else:
+                    book.available -= 1
+                    db.session.add(Loan(user_id=user.id, book_id=book.id, due_date=due_date))
+                    db.session.commit()
+                    return {"message": "New Loan has been created successfully."}
             else:
                 return {"error": "The request payload is not in JSON format"}
 
@@ -30,7 +38,5 @@ def loan_routes(app):
                 "due_date": loan.due_date
             } for loan in loans]
 
-
-            return {"loans": loans}
         else:
             return {"error": "The request payload is not in JSON format"}
