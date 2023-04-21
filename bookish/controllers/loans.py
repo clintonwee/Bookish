@@ -1,5 +1,5 @@
 from flask import request
-from bookish.models.example import Book, User
+from bookish.models.example import Book, User, Loan
 from bookish.models import db
 from datetime import timedelta, date
 
@@ -11,12 +11,9 @@ def loan_routes(app):
             if request.is_json:
                 data = request.get_json()
                 due_date = date.today() + timedelta(days=14)
-                # new_loan = book_loan.insert().values(
-                #     user_id=data['user_id'],
-                #     book_id=data['book_id'],
-                #     due_date=due_date
-                # )
-                # db.session.execute(new_loan)
+                user = User.query.get(data['user_id'])
+                book = Book.query.get(data['book_id'])
+                db.session.add(Loan(user_id=user.id, book_id=book.id, due_date=due_date))
                 db.session.commit()
                 return {"message": "New Loan has been created successfully."}
             else:
@@ -25,9 +22,15 @@ def loan_routes(app):
     @app.route('/loan/book/<book_id>', methods=['GET'])
     def view_loan_by_book(book_id):
         if request.method == 'GET':
-            query = Book.query.join(User, Book.user)
-            all_loans = query.order_by().all()
-            print(all_loans)
-            return {"message": "New Loan has been created successfully."}
+            book = Book.query.get(book_id)
+            loans = book.users
+            return [{
+                "first_name": loan.user.first_name,
+                "last_name": loan.user.last_name,
+                "due_date": loan.due_date
+            } for loan in loans]
+
+
+            return {"loans": loans}
         else:
             return {"error": "The request payload is not in JSON format"}

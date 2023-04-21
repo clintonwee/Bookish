@@ -18,7 +18,7 @@ class Book(db.Model):
     isbn = db.Column(db.String())
     total = db.Column(db.Integer)
     available = db.Column(db.Integer)
-    users = db.relationship("Loan", backref="books")
+    users = db.relationship("Loan", back_populates="book")
 
     def __init__(self, title, author, genre, isbn, total, available):
         self.title = title
@@ -53,7 +53,7 @@ class User(db.Model):
     last_name = db.Column(db.String())
     age = db.Column(db.Integer)
     email = db.Column(db.String())
-    books = db.relationship('Loan', backref="users")
+    books = db.relationship('Loan', back_populates="user")
 
     def __init__(self, first_name, last_name, age, email):
         self.first_name = first_name
@@ -81,20 +81,20 @@ class Loan(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     book_id = db.Column(db.Integer, db.ForeignKey("books.id"))
-    book = db.relationship("Books", backref="users")
+    book = db.relationship("Book", back_populates="users")
 
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    user = db.relationship("User", backref="books")
+    user = db.relationship("User", back_populates="books")
 
     due_date = db.Column(db.Date)
 
-    def __init__(self, book, user, due_date):
-        self.book = book,
-        self.user = user,
+    def __init__(self, book_id, user_id, due_date):
+        self.book_id = book_id,
+        self.user_id = user_id,
         self.due_date = due_date
 
     def __repr__(self):
-        return '<id {}, book: {} on loan to user: {}>'.format(self.book.title, self.user.first_name)
+        return '<id {}, book: {} on loan to user: {}>'.format(self.id, self.book.title, self.user.first_name)
 
     def serialize(self):
         return {

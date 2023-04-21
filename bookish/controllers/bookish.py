@@ -20,7 +20,7 @@ def bookish_routes(app):
                     'isbn': book.isbn,
                     'genre': book.genre,
                     'total': book.total,
-                    'available':book.available
+                    'available': book.available
                 } for book in all_books]
             return {"books": results}
 
