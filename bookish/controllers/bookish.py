@@ -51,6 +51,24 @@ def bookish_routes(app):
             else:
                 return {"error": "The request payload is not in JSON format"}
 
+    @app.route('/book/<id>', methods=['PUT'])
+    def update_book(id):
+        if request.method == 'PUT':
+            if request.is_json:
+                data = request.get_json()
+                book = Book.query.get(id)
+                book.title = data['title']
+                book.author = data['author']
+                book.genre = data['genre']
+                book.isbn = data['isbn']
+                book.total = data['total']
+                book.available = data['available']
+
+                db.session.commit()
+                return {"message": "Book has been edited successsfully."}
+            else:
+                return {"error": "The request payload is not in JSON format"}
+
     @app.route('/example', methods=['POST', 'GET'])
     def handle_example():
         if request.method == 'POST':
