@@ -1,14 +1,14 @@
 from bookish.app import db
 
-book_loan = db.Table('book_loan',
-                     db.Column('book_id', db.Integer, db.ForeignKey('book.id')),
-                     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-                     db.Column('due_date', db.Date)
-                     )
+# book_loan = db.Table('book_loan',
+#                      db.Column('book_id', db.Integer, db.ForeignKey('book.id')),
+#                      db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+#                      db.Column('due_date', db.Date)
+#                      )
 
 class Book(db.Model):
     # This sets the name of the table in the database
-    __tablename__ = 'book'
+    __tablename__ = 'books'
 
     # Here we outline what columns we want in our database
     id = db.Column(db.Integer, primary_key=True)
@@ -18,6 +18,7 @@ class Book(db.Model):
     isbn = db.Column(db.String())
     total = db.Column(db.Integer)
     available = db.Column(db.Integer)
+    users = db.relationship("Loan", backref="books")
 
     def __init__(self, title, author, genre, isbn, total, available):
         self.title = title
@@ -44,7 +45,7 @@ class Book(db.Model):
 
 class User(db.Model):
     # This sets the name of the table in the database
-    __tablename__ = 'user'
+    __tablename__ = 'users'
 
     # Here we outline what columns we want in our database
     id = db.Column(db.Integer, primary_key=True)
@@ -52,7 +53,7 @@ class User(db.Model):
     last_name = db.Column(db.String())
     age = db.Column(db.Integer)
     email = db.Column(db.String())
-    loans = db.relationship('Book', secondary=book_loan, backref="user")
+    books = db.relationship('Loan', backref="users")
 
     def __init__(self, first_name, last_name, age, email):
         self.first_name = first_name
@@ -70,4 +71,36 @@ class User(db.Model):
             'last_name': self.last_name,
             'age': self.age,
             'email': self.email
+        }
+
+class Loan(db.Model):
+    # This sets the name of the table in the database
+    __tablename__ = 'loans'
+
+    # Here we outline what columns we want in our database
+    id = db.Column(db.Integer, primary_key=True)
+
+    book_id = db.Column(db.Integer, db.ForeignKey("books.id"))
+    book = db.relationship("Books", backref="users")
+
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user = db.relationship("User", backref="books")
+
+    due_date = db.Column(db.Date)
+
+    def __init__(self, book, user, due_date):
+        self.book = book,
+        self.user = user,
+        self.due_date = due_date
+
+    def __repr__(self):
+        return '<id {}, book: {} on loan to user: {}>'.format(self.book.title, self.user.first_name)
+
+    def serialize(self):
+        return {
+            # 'id': self.id,
+            # 'first_name': self.first_name,
+            # 'last_name': self.last_name,
+            # 'age': self.age,
+            # 'email': self.email
         }
