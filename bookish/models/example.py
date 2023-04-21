@@ -2,7 +2,8 @@ from bookish.app import db
 
 book_loan = db.Table('book_loan',
                      db.Column('book_id', db.Integer, db.ForeignKey('book.id')),
-                     db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
+                     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+                     db.Column('due_date', db.Date)
                      )
 
 class Book(db.Model):

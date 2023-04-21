@@ -23,12 +23,20 @@ def user_routes(app):
     def get_user(id):
         if request.method == 'GET':
             user = User.query.get(id)
+            loans = [
+                {
+                    'title': loan.title,
+                    'author': loan.author,
+                    'due_date': loan.due_date
+                } for loan in user.loans
+            ]
             result = {
                     'id': user.id,
                     'first_name': user.first_name,
                     'last_name': user.last_name,
                     'age': user.age,
-                    'email': user.email
+                    'email': user.email,
+                    'loans': loans
                 }
             return {"user": result}
 
