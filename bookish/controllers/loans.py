@@ -40,3 +40,18 @@ def loan_routes(app):
 
         else:
             return {"error": "The request payload is not in JSON format"}
+
+    @app.route('/loan/user/<user_id>', methods=['GET'])
+    def view_loan_by_user(user_id):
+        if request.method == 'GET':
+            user = User.query.get(user_id)
+            loans = user.books
+            return [{
+                "title": loan.book.title,
+                "author": loan.book.author,
+                "isbn": loan.book.isbn,
+                "due_date": loan.due_date
+            } for loan in loans]
+
+        else:
+            return {"error": "The request payload is not in JSON format"}
