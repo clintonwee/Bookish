@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Container } from "reactstrap";
 import { HomePage } from "./homePage/HomePage";
 import { ApiService } from "./ApiService";
+import { Routes, Route } from "react-router-dom"
+import LoginPage from "./loginPage/LoginPage";
 
 export default function App() {
   const apiService = new ApiService()
@@ -23,9 +25,10 @@ export default function App() {
 
   return (
     <div>
-      <Container>
-          <HomePage okStatus={state.status}/>
-      </Container>
+      <Routes>
+        <Route path="/" element={ <HomePage/> } />
+        <Route path="login" element={ <LoginPage/> } />
+      </Routes>
     </div>
   );
 }
