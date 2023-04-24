@@ -1,22 +1,26 @@
-import { useLocation, useNavigate } from 'react-router-dom'
+import {useLocation, useNavigate} from 'react-router-dom'
 import {RiLogoutBoxRLine} from "react-icons/ri"
+import useToken from "../../utils/useToken"
 
 import axios from "axios";
+
 const Navbar = () => {
+    const {prepareHeaders, removeToken} = useToken()
     const location = useLocation()
-    console.log(location.pathname)
     const navigate = useNavigate()
     const logout = async () => {
-        const res = await axios.post("/logout")
-        if(res.data.status === 'success'){
-           navigate("/login")
+        const headers = prepareHeaders()
+        const res = await axios.post("/logout", {}, headers)
+        if (res.data.status === 'success') {
+            removeToken()
+            navigate("/login")
         }
     }
 
     const navPages = [
         {url: "/home", name: "Home"}, {url: "/loans", name: "Loans"}
     ]
-    return(
+    return (
         <nav className="w-full bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                 <a href="/home" className="flex items-center">
@@ -37,17 +41,18 @@ const Navbar = () => {
                 </button>
                 <div className="hidden w-full md:block md:w-auto" id="navbar-dropdown">
                     <ul className="flex flex-col items-center font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-                    {navPages.map((page, index) => (
-                        <li key={index}>
-                            <a href={page.url}
-                               className={`block py-2 pl-3 pr-4 bg-blue-700 rounded md:bg-transparent ${page.url === location.pathname ? 'text-blue-700' : 'text-black'} md:p-0 md:dark:text-blue-500 dark:bg-blue-600 md:dark:bg-transparent`}
-                               aria-current="page">{page.name}</a>
-                        </li>
-                    ))}
+                        {navPages.map((page, index) => (
+                            <li key={index}>
+                                <a href={page.url}
+                                   className={`block py-2 pl-3 pr-4 bg-blue-700 rounded md:bg-transparent ${page.url === location.pathname ? 'text-blue-700' : 'text-black'} md:p-0 md:dark:text-blue-500 dark:bg-blue-600 md:dark:bg-transparent`}
+                                   aria-current="page">{page.name}</a>
+                            </li>
+                        ))}
                         <li>
                             <button onClick={logout}
-                               className="border border-red-500 hover:bg-red-100 text-red-500 px-4 rounded-lg py-2"
-                               aria-current="page"><RiLogoutBoxRLine className="inline mr-1"/>Logout</button>
+                                    className="border border-red-500 hover:bg-red-100 text-red-500 px-4 rounded-lg py-2"
+                                    aria-current="page"><RiLogoutBoxRLine className="inline mr-1"/>Logout
+                            </button>
                         </li>
                     </ul>
                 </div>

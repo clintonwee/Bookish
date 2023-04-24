@@ -1,8 +1,10 @@
 import React  from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import useToken from "../../utils/useToken";
 
 const LoginPage = () => {
+    const {setToken} = useToken()
         const navigate = useNavigate()
         const onSubmit = async (e) => {
         e.preventDefault()
@@ -14,6 +16,7 @@ const LoginPage = () => {
 
         const res = await axios.post("/login", newUser)
         if(res.data.status === 'success'){
+            setToken(res.data.access_token)
             navigate("/home")
         } else {
             console.log(res)

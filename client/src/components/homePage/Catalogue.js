@@ -1,16 +1,19 @@
 import {useEffect, useState} from "react";
-
+import prepareHeaders from "../../utils/prepareHeaders"
+import useToken from "../../utils/useToken";
 import axios from "axios";
 
 const Catalogue = () => {
-
+    const {token, prepareHeaders} = useToken();
     const [books, setBooks] = useState([]);
     useEffect(() => {
-        async function fetchData(){
-            const res = await axios.get("/books")
+        const fetchData = async () => {
+            const headers = prepareHeaders()
+            const res = await axios.get("/books", headers)
             setBooks(res.data.books)
         }
         fetchData()
+
     }, [])
 
     return (
@@ -45,7 +48,10 @@ const Catalogue = () => {
                             {book.genre}
                         </td>
                         <td className="px-6 py-4">
-                            {book.available ? <button className="bg-blue-500 hover:bg-blue-700 text-white px-4 rounded-lg py-2">Borrow</button> : <button className="border border-red-500 hover:bg-red-100 text-red-500 px-4 rounded-lg py-2">Unavailable</button>}
+                            {book.available ? <button
+                                    className="bg-blue-500 hover:bg-blue-700 text-white px-4 rounded-lg py-2">Borrow</button> :
+                                <button
+                                    className="border border-red-500 hover:bg-red-100 text-red-500 px-4 rounded-lg py-2">Unavailable</button>}
                         </td>
                     </tr>
                 ))}
