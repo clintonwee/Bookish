@@ -8,15 +8,13 @@ function useToken() {
         return userToken && userToken
     }
 
-
     const [token, setToken] = useState(getToken());
 
     async function getProfile() {
         if (token) {
             const headers = prepareHeaders()
-            console.log(headers)
             const res = await axios.get("/profile", headers )
-            return res;
+            return res.data;
         } else {
             return { status: "error" }
         }

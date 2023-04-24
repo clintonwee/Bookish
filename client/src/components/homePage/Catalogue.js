@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import prepareHeaders from "../../utils/prepareHeaders"
 import useToken from "../../utils/useToken";
 import axios from "axios";
-
+import ConfirmModal from "../modals/ConfirmModal";
 const Catalogue = () => {
     const {token, prepareHeaders} = useToken();
     const [books, setBooks] = useState([]);
@@ -48,8 +48,7 @@ const Catalogue = () => {
                             {book.genre}
                         </td>
                         <td className="px-6 py-4">
-                            {book.available ? <button
-                                    className="bg-blue-500 hover:bg-blue-700 text-white px-4 rounded-lg py-2">Borrow</button> :
+                            {book.available ? <ConfirmModal title={book.title} author={book.author} id={book.id}/> :
                                 <button
                                     className="border border-red-500 hover:bg-red-100 text-red-500 px-4 rounded-lg py-2">Unavailable</button>}
                         </td>
