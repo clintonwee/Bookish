@@ -1,10 +1,29 @@
 import React, {Component} from "react";
-
+import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 const LoginPage = () => {
+        const navigate = useNavigate()
+        const onSubmit = async (e) => {
+        e.preventDefault()
+        const {email, password} = e.target.elements;
+        const newUser = {
+            email: email.value,
+            password: password.value,
+        }
+
+        const res = await axios.post("/login", newUser)
+        if(res.data.status === 'success'){
+            navigate("/home")
+        } else {
+            console.log(res)
+            alert("An error has occurred")
+        }
+    }
+
     return (
         <div className="w-full px-6 h-screen flex justify-center pt-10 md:pt-0 md:items-center">
-            <form className="w-full md:w-3/4 md:max-w-screen-md">
+            <form className="w-full md:w-3/4 md:max-w-screen-md" onSubmit={onSubmit}>
                 <div className="mb-6">
                     <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
                         email</label>
