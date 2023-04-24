@@ -65,7 +65,6 @@ def user_routes(app):
             return {"user": result}
 
     @app.route('/user', methods=['POST'])
-    @login_required
     def create_user():
         if request.method == 'POST':
             if request.is_json:
@@ -73,9 +72,9 @@ def user_routes(app):
                 new_user = User(first_name=data['first_name'], last_name=data['last_name'], age=data['age'], email=data['email'], password=data['password'], isAdmin=data['isAdmin'])
                 db.session.add(new_user)
                 db.session.commit()
-                return {"message": "New User has been created successfully."}
+                return {"status": "success", "message": "New User has been created successfully."}
             else:
-                return {"error": "The request payload is not in JSON format"}
+                return {"status": "error", "message": "The request payload is not in JSON format"}
 
     @app.route('/user/<id>', methods=['PUT'])
     @login_required
