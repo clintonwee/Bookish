@@ -1,12 +1,21 @@
-import React  from "react";
+import React, {useEffect} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import useToken from "../../utils/useToken";
 
 const LoginPage = () => {
-    const {setToken} = useToken()
-        const navigate = useNavigate()
-        const onSubmit = async (e) => {
+
+    const {setToken, token, getProfile} = useToken()
+
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (token) {
+            navigate("/home")
+        }
+    }, [token])
+
+    const onSubmit = async (e) => {
         e.preventDefault()
         const {email, password} = e.target.elements;
         const newUser = {
@@ -15,7 +24,7 @@ const LoginPage = () => {
         }
 
         const res = await axios.post("/login", newUser)
-        if(res.data.status === 'success'){
+        if (res.data.status === 'success') {
             setToken(res.data.access_token)
             navigate("/home")
         } else {
@@ -45,7 +54,9 @@ const LoginPage = () => {
                     <button type="submit"
                             className="text-white mb-2 md:mb-0 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit
                     </button>
-                    <p className="text-sm text-gray-500 ml-4">Not a user? <a href="/register" className="text-blue-500 underline">Sign up</a></p>
+                    <p className="text-sm text-gray-500 ml-4">Not a user? <a href="/register"
+                                                                             className="text-blue-500 underline">Sign
+                        up</a></p>
                 </div>
             </form>
         </div>

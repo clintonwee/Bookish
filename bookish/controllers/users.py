@@ -31,6 +31,21 @@ def user_routes(app):
         unset_jwt_cookies(response)
         return response
 
+    @app.route('/profile', methods=['GET'])
+    @jwt_required()
+    def my_profile():
+        email = get_jwt_identity()
+        user = User.query.filter_by(email=email).first()
+        print(user)
+        response_body = {
+            "id": user.id,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email,
+            "isAdmin": user.isAdmin
+        }
+        return response_body
+
     @app.route('/users', methods=['GET'])
     @jwt_required()
     def get_all_users():

@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import axios from "axios"
 
 function useToken() {
 
@@ -7,7 +8,20 @@ function useToken() {
         return userToken && userToken
     }
 
+
     const [token, setToken] = useState(getToken());
+
+    async function getProfile() {
+        if (token) {
+            const headers = prepareHeaders()
+            console.log(headers)
+            const res = await axios.get("/profile", headers )
+            return res;
+        } else {
+            return { status: "error" }
+        }
+    }
+
 
     function prepareHeaders() {
         return {
@@ -31,8 +45,8 @@ function useToken() {
         setToken: saveToken,
         token,
         removeToken,
-        prepareHeaders
-
+        prepareHeaders,
+        getProfile
     }
 
 }
