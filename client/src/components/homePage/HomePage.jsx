@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React from "react";
 import Navbar from "../Layout/Navbar";
 import Catalogue from "./Catalogue";
 

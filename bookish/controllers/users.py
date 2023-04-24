@@ -1,8 +1,11 @@
-from flask import request
+from flask import request, jsonify
 from bookish.models.example import Book, User
 from bookish.models import db
 from flask_login import login_user, login_required, logout_user
+from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, unset_jwt_cookies, jwt_required, JWTManager
+
 def user_routes(app):
+
     @app.route('/login', methods=['POST'])
     def login():
         if request.method == 'POST':
@@ -13,8 +16,8 @@ def user_routes(app):
 
                 user = User.query.filter_by(email=email).first()
                 if user.password == password:
-                    login_user(user)
-                    return {"status": "success", "message": "Login completed"}
+                    access_token = create_access_token(identity=email)
+                    return {"status": "success", "message": "Login completed", "access_token":access_token}
                 else:
                     return {"status": "error", "message": "Incorrect password given"}
 
@@ -22,13 +25,14 @@ def user_routes(app):
                 return {"error": "The request payload is not in JSON format"}
 
     @app.route("/logout", methods=['POST'])
-    @login_required
+    @jwt_required()
     def logout():
-        logout_user()
-        return {"status": "success", "redirect": "/login"}
+        response = jsonify({"status": "success", "redirect": "/login"})
+        unset_jwt_cookies(response)
+        return response
 
     @app.route('/users', methods=['GET'])
-    @login_required
+    @jwt_required()
     def get_all_users():
         if request.method == 'GET':
             all_users = User.query.all()
@@ -43,7 +47,7 @@ def user_routes(app):
             return {"users": results}
 
     @app.route('/user/<id>', methods=['GET'])
-    @login_required
+    @jwt_required()
     def get_user(id):
         if request.method == 'GET':
             user = User.query.get(id)
@@ -77,7 +81,7 @@ def user_routes(app):
                 return {"status": "error", "message": "The request payload is not in JSON format"}
 
     @app.route('/user/<id>', methods=['PUT'])
-    @login_required
+    @jwt_required()
     def update_user(id):
         if request.method == 'PUT':
             if request.is_json:

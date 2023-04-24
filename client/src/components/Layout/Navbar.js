@@ -1,8 +1,17 @@
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
+import {RiLogoutBoxRLine} from "react-icons/ri"
 
+import axios from "axios";
 const Navbar = () => {
     const location = useLocation()
     console.log(location.pathname)
+    const navigate = useNavigate()
+    const logout = async () => {
+        const res = await axios.post("/logout")
+        if(res.data.status === 'success'){
+           navigate("/login")
+        }
+    }
 
     const navPages = [
         {url: "/home", name: "Home"}, {url: "/loans", name: "Loans"}
@@ -27,7 +36,7 @@ const Navbar = () => {
                     </svg>
                 </button>
                 <div className="hidden w-full md:block md:w-auto" id="navbar-dropdown">
-                    <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                    <ul className="flex flex-col items-center font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
                     {navPages.map((page, index) => (
                         <li key={index}>
                             <a href={page.url}
@@ -35,6 +44,11 @@ const Navbar = () => {
                                aria-current="page">{page.name}</a>
                         </li>
                     ))}
+                        <li>
+                            <button onClick={logout}
+                               className="border border-red-500 hover:bg-red-100 text-red-500 px-4 rounded-lg py-2"
+                               aria-current="page"><RiLogoutBoxRLine className="inline mr-1"/>Logout</button>
+                        </li>
                     </ul>
                 </div>
             </div>
