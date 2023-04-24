@@ -1,5 +1,5 @@
 from bookish.app import db
-
+from flask_login import UserMixin
 # book_loan = db.Table('book_loan',
 #                      db.Column('book_id', db.Integer, db.ForeignKey('book.id')),
 #                      db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
@@ -9,6 +9,7 @@ from bookish.app import db
 class Book(db.Model):
     # This sets the name of the table in the database
     __tablename__ = 'books'
+
 
     # Here we outline what columns we want in our database
     id = db.Column(db.Integer, primary_key=True)
@@ -43,7 +44,7 @@ class Book(db.Model):
         }
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     # This sets the name of the table in the database
     __tablename__ = 'users'
 
@@ -57,11 +58,13 @@ class User(db.Model):
     password = db.Column(db.String())
     isAdmin = db.Column(db.Boolean)
 
-    def __init__(self, first_name, last_name, age, email):
+    def __init__(self, first_name, last_name, age, email, password, isAdmin):
         self.first_name = first_name
         self.last_name = last_name
         self.age = age
         self.email = email
+        self.password = password
+        self.isAdmin = isAdmin
 
     def __repr__(self):
         return '<id {}, name {} {}>'.format(self.id, self.first_name, self.last_name)

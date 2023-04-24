@@ -25,7 +25,7 @@ def loan_routes(app):
                     db.session.commit()
                     return {"message": "New Loan has been created successfully."}
             else:
-                return {"error": "The request payload is not in JSON format"}
+                return {"status": "error", "message": "The request payload is not in JSON format"}
 
     @app.route('/loan/book/<book_id>', methods=['GET'])
     def view_loan_by_book(book_id):
@@ -39,7 +39,7 @@ def loan_routes(app):
             } for loan in loans]
 
         else:
-            return {"error": "The request payload is not in JSON format"}
+            return {"status": "error", "message": "The request payload is not in JSON format"}
 
     @app.route('/loan/user/<user_id>', methods=['GET'])
     def view_loan_by_user(user_id):

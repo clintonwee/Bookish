@@ -1,7 +1,7 @@
 from flask import request
 from bookish.models.example import Book
 from bookish.models import db
-
+from flask_login import login_required
 
 def bookish_routes(app):
     @app.route('/healthcheck')
@@ -9,6 +9,7 @@ def bookish_routes(app):
         return {"status": "OK"}
 
     @app.route('/books', methods=['GET'])
+    @login_required
     def get_all_books():
         if request.method == 'GET':
             all_books = Book.query.all()
