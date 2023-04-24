@@ -21,7 +21,7 @@ def loan_routes(app):
                     }
                 else:
                     book.available -= 1
-                    db.session.add(Loan(user_id=user.id, book_id=book.id, due_date=due_date))
+                    db.session.add(Loan(user_id=user.id, book_id=book.id, due_date=date.today()))
                     db.session.commit()
                     return {"message": "New Loan has been created successfully."}
             else:
@@ -49,8 +49,9 @@ def loan_routes(app):
             return [{
                 "title": loan.book.title,
                 "author": loan.book.author,
+                "genre": loan.book.genre,
                 "isbn": loan.book.isbn,
-                "due_date": loan.due_date
+                "due_date": loan.due_date.isoformat()
             } for loan in loans]
 
         else:

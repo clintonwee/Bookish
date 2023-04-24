@@ -1,17 +1,18 @@
 import React, {Component} from "react";
 import Navbar from "../Layout/Navbar";
-import Catalogue from "./Catalogue";
+import Loans from "./Loans"
 
-const HomePage = () => {
+const LoanPage = () => {
         return (
             <div className="min-h-screen flex flex-col items-center">
                 <Navbar/>
                 <div className="w-3/4 mt-10 bg-gray-100 shadow-lg px-4 py-4 rounded-lg">
-                    <p className="text-2xl mb-4">Catalogue</p>
-                    <Catalogue/>
+                    <p className="text-2xl mb-4">My Loans</p>
+                    <Loans/>
                 </div>
             </div>
         );
 }
 
-export default HomePage
+export default LoanPage
+

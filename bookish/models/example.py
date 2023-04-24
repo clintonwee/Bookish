@@ -54,6 +54,7 @@ class User(db.Model):
     age = db.Column(db.Integer)
     email = db.Column(db.String())
     books = db.relationship('Loan', back_populates="user")
+    password = d
 
     def __init__(self, first_name, last_name, age, email):
         self.first_name = first_name

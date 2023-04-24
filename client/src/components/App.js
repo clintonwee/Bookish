@@ -4,6 +4,7 @@ import  HomePage  from "./homePage/HomePage";
 import { ApiService } from "./ApiService";
 import { Routes, Route } from "react-router-dom"
 import LoginPage from "./loginPage/LoginPage";
+import LoanPage from "./loanPage/LoanPage";
 
 export default function App() {
   const apiService = new ApiService()
@@ -28,6 +29,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={ <HomePage/> } />
         <Route path="login" element={ <LoginPage/> } />
+        <Route path="loans" element={ <LoanPage/> } />
       </Routes>
     </div>
   );
