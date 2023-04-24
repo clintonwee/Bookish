@@ -18,8 +18,10 @@ const Navbar = () => {
     }
 
     const navPages = [
-        {url: "/home", name: "Home"}, {url: "/loans", name: "Loans"}
+        { url: "/home", name: "Home" },
+        { url: "/loans", name: "Loans" }
     ]
+
     return (
         <nav className="w-full bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">

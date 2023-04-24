@@ -28,7 +28,7 @@ def bookish_routes(app):
             return {"books": results}
 
     @app.route('/book/<id>', methods=['GET'])
-    @login_required
+    @jwt_required()
     def get_book(id):
         if request.method == 'GET':
             book = Book.query.get(id)
@@ -44,7 +44,7 @@ def bookish_routes(app):
             return {"book": result}
 
     @app.route('/book', methods=['POST'])
-    @login_required
+    @jwt_required()
     def create_book():
         if request.method == 'POST':
             if request.is_json:
@@ -57,7 +57,7 @@ def bookish_routes(app):
                 return {"error": "The request payload is not in JSON format"}
 
     @app.route('/book/<id>', methods=['PUT'])
-    @login_required
+    @jwt_required()
     def update_book(id):
         if request.method == 'PUT':
             if request.is_json:
@@ -76,7 +76,7 @@ def bookish_routes(app):
                 return {"error": "The request payload is not in JSON format"}
 
     @app.route('/example', methods=['POST', 'GET'])
-    @login_required
+    @jwt_required()
     def handle_example():
         if request.method == 'POST':
             if request.is_json:

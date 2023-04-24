@@ -1,13 +1,16 @@
 import {useEffect, useState} from "react";
 import {formatDate, isDue} from "../../utils/dateFormat";
 import axios from "axios";
+import useToken from "../../utils/useToken"
+
 
 const Loans = () => {
-
+    const {prepareHeaders} = useToken()
     const [loans, setLoans] = useState([]);
     useEffect(() => {
         async function fetchData(){
-            const res = await axios.get(`/loan/user/1`)
+            const headers = prepareHeaders()
+            const res = await axios.get(`/loan/user/1`, headers)
             console.log(res)
             setLoans(res.data)
         }

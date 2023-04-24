@@ -1,8 +1,8 @@
 from flask import request, jsonify
-from bookish.models.example import Book, User
+from bookish.models.example import User
 from bookish.models import db
-from flask_login import login_user, login_required, logout_user
 from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, unset_jwt_cookies, jwt_required, JWTManager
+
 
 def user_routes(app):
 
