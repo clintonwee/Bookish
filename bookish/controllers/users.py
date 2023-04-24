@@ -28,6 +28,7 @@ def user_routes(app):
         return {"status": "success", "redirect": "/login"}
 
     @app.route('/users', methods=['GET'])
+    @login_required
     def get_all_users():
         if request.method == 'GET':
             all_users = User.query.all()
@@ -42,6 +43,7 @@ def user_routes(app):
             return {"users": results}
 
     @app.route('/user/<id>', methods=['GET'])
+    @login_required
     def get_user(id):
         if request.method == 'GET':
             user = User.query.get(id)
@@ -63,6 +65,7 @@ def user_routes(app):
             return {"user": result}
 
     @app.route('/user', methods=['POST'])
+    @login_required
     def create_user():
         if request.method == 'POST':
             if request.is_json:
@@ -75,6 +78,7 @@ def user_routes(app):
                 return {"error": "The request payload is not in JSON format"}
 
     @app.route('/user/<id>', methods=['PUT'])
+    @login_required
     def update_user(id):
         if request.method == 'PUT':
             if request.is_json:

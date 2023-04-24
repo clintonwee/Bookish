@@ -2,10 +2,11 @@ from flask import request
 from bookish.models.example import Book, User, Loan
 from bookish.models import db
 from datetime import timedelta, date
-
+from flask_login import login_required
 def loan_routes(app):
 
     @app.route('/loan', methods=['POST'])
+    @login_required
     def create_loan():
         if request.method == 'POST':
             if request.is_json:
@@ -28,6 +29,7 @@ def loan_routes(app):
                 return {"status": "error", "message": "The request payload is not in JSON format"}
 
     @app.route('/loan/book/<book_id>', methods=['GET'])
+    @login_required
     def view_loan_by_book(book_id):
         if request.method == 'GET':
             book = Book.query.get(book_id)
@@ -42,6 +44,7 @@ def loan_routes(app):
             return {"status": "error", "message": "The request payload is not in JSON format"}
 
     @app.route('/loan/user/<user_id>', methods=['GET'])
+    @login_required
     def view_loan_by_user(user_id):
         if request.method == 'GET':
             user = User.query.get(user_id)
