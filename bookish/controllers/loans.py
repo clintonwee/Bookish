@@ -29,7 +29,7 @@ def loan_routes(app):
             else:
                 return {"status": "error", "message": "The request payload is not in JSON format"}
 
-    @app.route('/loan/return', methods=['POST'])
+    @app.route('/loan/return/<loan_id>', methods=['POST'])
     @jwt_required()
     def delete_loan(loan_id):
         if request.method == 'POST':

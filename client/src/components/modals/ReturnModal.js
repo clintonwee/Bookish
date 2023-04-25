@@ -17,7 +17,7 @@ const ReturnModal = ({title, author, id, refetch}) => {
         const headers = prepareHeaders();
         const profile = await getProfile()
 
-        const res = await axios.post(`/loan/${id}`, {}, headers)
+        const res = await axios.post(`/loan/return/${id}`, {}, headers)
         await refetch()
         setOpen(false)
         setLoading(false)
