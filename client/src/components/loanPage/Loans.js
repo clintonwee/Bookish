@@ -2,18 +2,21 @@ import {useEffect, useState} from "react";
 import {formatDate, isDue} from "../../utils/dateFormat";
 import axios from "axios";
 import useToken from "../../utils/useToken"
+import ReturnModal from "../modals/ReturnModal";
 
 
 const Loans = () => {
     const {prepareHeaders, getProfile} = useToken()
     const [loans, setLoans] = useState([]);
+
+    async function fetchData() {
+        const profile = await getProfile()
+        const headers = prepareHeaders()
+        const res = await axios.get(`/loan/user/${profile.id}`, headers)
+        setLoans(res.data)
+    }
+
     useEffect(() => {
-        async function fetchData(){
-            const profile = await getProfile()
-            const headers = prepareHeaders()
-            const res = await axios.get(`/loan/user/${profile.id}`, headers)
-            setLoans(res.data)
-        }
         fetchData()
     }, [])
 
@@ -34,6 +37,8 @@ const Loans = () => {
                     <th scope="col" className="px-6 py-3">
                         Due Date
                     </th>
+                    <th scope="col" className="px-6 py-3">
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -51,6 +56,9 @@ const Loans = () => {
                         </td>
                         <td className={`px-6 py-4 ${isDue(loan.due_date) ? 'text-red-600' : 'text-black'}`}>
                             {formatDate(loan.due_date)}
+                        </td>
+                        <td className="px-6 py-4">
+                            <ReturnModal author={loan.author} title={loan.title} id={loan.id} refetch={fetchData} />
                         </td>
                     </tr>
                 ))}
