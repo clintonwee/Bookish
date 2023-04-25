@@ -51,7 +51,13 @@ def loan_routes(app):
             return [{
                 "first_name": loan.user.first_name,
                 "last_name": loan.user.last_name,
-                "due_date": loan.due_date
+                "id": loan.id,
+                "book_id": loan.book_id,
+                "title": loan.book.title,
+                "author": loan.book.author,
+                "genre": loan.book.genre,
+                "isbn": loan.book.isbn,
+                "due_date": loan.due_date.isoformat()
             } for loan in loans]
 
         else:

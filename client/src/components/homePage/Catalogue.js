@@ -4,35 +4,47 @@ import useToken from "../../utils/useToken";
 import axios from "axios";
 import ConfirmModal from "../modals/ConfirmModal";
 import ReturnModal from "../modals/ReturnModal";
+import UnavailableModal from "../modals/UnavailableModal";
+
 const Catalogue = () => {
     const {token, prepareHeaders, getProfile} = useToken();
     const [books, setBooks] = useState([]);
     const [loans, setLoans] = useState([])
+    const [loansLoading, setLoansLoading] = useState(false)
     const [borrowedBookIds, setBorrowedBookIds] = useState([])
 
-     const fetchData = async () => {
-            const headers = prepareHeaders()
-            const profile = await getProfile()
+    const fetchLoans = async (id) => {
+        setLoansLoading(true)
+        const headers = prepareHeaders()
+        const resLoans = await axios.get(`/loan/book/${id}`, headers)
+        setLoans(resLoans.data)
+        setLoansLoading(false)
+    }
 
-            const resLoans = await axios.get(`/loan/user/${profile.id}`, headers)
-            const bookIds = resLoans.data.map((loan) => loan.book_id)
-            const loanIds = resLoans.data.map((loan) => loan.id)
+    const fetchData = async () => {
+        const headers = prepareHeaders()
+        const profile = await getProfile()
 
-            const resBooks = await axios.get("/books", headers)
-            const books = resBooks.data.books.map((book) => {
-                const index = bookIds.indexOf(book.id)
-                if(index != -1){
-                    book.borrowed = true;
-                    book.loan_id = loanIds[index];
-                } else {
-                    book.borrowed = false
-                    book.loan_id = -1
-                }
-                return book;
-            })
+        const resLoans = await axios.get(`/loan/user/${profile.id}`, headers)
+        const bookIds = resLoans.data.map((loan) => loan.book_id)
+        const loanIds = resLoans.data.map((loan) => loan.id)
 
-            setBooks(resBooks.data.books)
-        }
+
+        const resBooks = await axios.get("/books", headers)
+        const books = resBooks.data.books.map((book) => {
+            const index = bookIds.indexOf(book.id)
+            if (index != -1) {
+                book.borrowed = true;
+                book.loan_id = loanIds[index];
+            } else {
+                book.borrowed = false
+                book.loan_id = -1
+            }
+            return book;
+        })
+
+        setBooks(resBooks.data.books)
+    }
 
     useEffect(() => {
         fetchData()
@@ -70,9 +82,12 @@ const Catalogue = () => {
                             {book.genre}
                         </td>
                         <td className="px-6 py-4 flex justify-center">
-                            {book.borrowed ? <ReturnModal refetch={fetchData} title={book.title} author={book.author} id={book.loan_id}/> : book.available ? <ConfirmModal refetch={fetchData} title={book.title} author={book.author} id={book.id}/> :
-                                <button
-                                    className="border border-red-500 hover:bg-red-100 text-red-500 px-4 rounded-lg py-2">Unavailable</button>}
+                            {book.borrowed ? <ReturnModal refetch={fetchData} title={book.title} author={book.author}
+                                                          id={book.loan_id}/> : book.available ?
+                                <ConfirmModal refetch={fetchData} title={book.title} author={book.author}
+                                              id={book.id}/> :
+                                <UnavailableModal title={book.title} author={book.author} id={book.id} loans={loans}
+                                                  loading={loansLoading} fetchLoans={fetchLoans}/>}
                         </td>
                     </tr>
                 ))}
