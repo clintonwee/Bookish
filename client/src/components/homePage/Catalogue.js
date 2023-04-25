@@ -3,33 +3,39 @@ import prepareHeaders from "../../utils/prepareHeaders"
 import useToken from "../../utils/useToken";
 import axios from "axios";
 import ConfirmModal from "../modals/ConfirmModal";
+import ReturnModal from "../modals/ReturnModal";
 const Catalogue = () => {
     const {token, prepareHeaders, getProfile} = useToken();
     const [books, setBooks] = useState([]);
     const [loans, setLoans] = useState([])
     const [borrowedBookIds, setBorrowedBookIds] = useState([])
-    useEffect(() => {
-        const fetchData = async () => {
+
+     const fetchData = async () => {
             const headers = prepareHeaders()
             const profile = await getProfile()
 
             const resLoans = await axios.get(`/loan/user/${profile.id}`, headers)
             const bookIds = resLoans.data.map((loan) => loan.book_id)
+            const loanIds = resLoans.data.map((loan) => loan.id)
 
             const resBooks = await axios.get("/books", headers)
             const books = resBooks.data.books.map((book) => {
-                if(bookIds.indexOf(book.id) != -1){
+                const index = bookIds.indexOf(book.id)
+                if(index != -1){
                     book.borrowed = true;
+                    book.loan_id = loanIds[index];
                 } else {
                     book.borrowed = false
+                    book.loan_id = -1
                 }
                 return book;
             })
 
             setBooks(resBooks.data.books)
         }
-        fetchData()
 
+    useEffect(() => {
+        fetchData()
     }, [])
 
     return (
@@ -64,7 +70,7 @@ const Catalogue = () => {
                             {book.genre}
                         </td>
                         <td className="px-6 py-4 flex justify-center">
-                            {book.borrowed ? <p className="text-gray-500 px-4 rounded-lg py-2">Borrowed</p> : book.available ? <ConfirmModal title={book.title} author={book.author} id={book.id}/> :
+                            {book.borrowed ? <ReturnModal refetch={fetchData} title={book.title} author={book.author} id={book.loan_id}/> : book.available ? <ConfirmModal refetch={fetchData} title={book.title} author={book.author} id={book.id}/> :
                                 <button
                                     className="border border-red-500 hover:bg-red-100 text-red-500 px-4 rounded-lg py-2">Unavailable</button>}
                         </td>

@@ -29,6 +29,19 @@ def loan_routes(app):
             else:
                 return {"status": "error", "message": "The request payload is not in JSON format"}
 
+    @app.route('/loan/return', methods=['POST'])
+    @jwt_required()
+    def delete_loan(loan_id):
+        if request.method == 'POST':
+            loan = Loan.query.get(loan_id)
+            book_id = loan.book_id
+            book = Book.query.get(book_id)
+            book.available += 1
+
+            db.session.delete(loan)
+            db.session.commit()
+            return {"status": "success", "message": "Book has been returned"}
+
     @app.route('/loan/book/<book_id>', methods=['GET'])
     @jwt_required()
     def view_loan_by_book(book_id):
@@ -51,6 +64,7 @@ def loan_routes(app):
             user = User.query.get(user_id)
             loans = user.books
             return [{
+                "id": loan.id,
                 "book_id": loan.book_id,
                 "title": loan.book.title,
                 "author": loan.book.author,
