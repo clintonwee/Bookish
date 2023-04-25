@@ -6,7 +6,7 @@ import ConfirmModal from "../modals/ConfirmModal";
 import ReturnModal from "../modals/ReturnModal";
 import UnavailableModal from "../modals/UnavailableModal";
 
-const Catalogue = ({books, fetchData}) => {
+const Catalogue = ({books, fetchData, currPage}) => {
     const {token, prepareHeaders, getProfile} = useToken();
     const [loans, setLoans] = useState([])
     const [loansLoading, setLoansLoading] = useState(false)
@@ -44,7 +44,7 @@ const Catalogue = ({books, fetchData}) => {
                 {books.map((book, index) => (
                     <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                         <td className="px-6 py-4">
-                            {index + 1}
+                            { (currPage - 1) * 10 + index + 1}
                         </td>
                         <th scope="row"
                             className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">

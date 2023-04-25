@@ -1,7 +1,7 @@
 import {useState} from "react";
 import Spinner from "../Spinner";
 
-const SearchBar = ({setSearch, fetchData}) => {
+const SearchBar = ({setSearch, fetchData, changePage, currPage}) => {
     const [loading, setLoading] = useState(false)
     const handleSearch = (e) => {
         setSearch(e.currentTarget.value)
@@ -10,7 +10,13 @@ const SearchBar = ({setSearch, fetchData}) => {
     const onSubmit = async (e) => {
         setLoading(true)
         e.preventDefault();
-        await fetchData()
+
+        if(currPage > 1){
+            changePage(1)
+        } else {
+            fetchData()
+        }
+
         setLoading(false)
     }
     return (

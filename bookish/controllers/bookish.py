@@ -21,10 +21,13 @@ def bookish_routes(app):
             all_books = None
             if search_param:
                 print("Filtering by params")
-                all_books = Book.query.filter(Book.title.ilike('%{}%'.format(search_param)) | Book.author.ilike('%{}%'.format(search_param)))
+                all_books = db.paginate(db.select(Book).filter(Book.title.ilike('%{}%'.format(search_param)) | Book.author.ilike('%{}%'.format(search_param))).order_by(Book.title))
+                # all_books = db.paginate(Book.query.filter(Book.title.ilike('%{}%'.format(search_param)) | Book.author.ilike('%{}%'.format(search_param))))
             else:
                 print("Query all")
-                all_books = Book.query.all()
+                all_books = db.paginate(db.select(Book).order_by(Book.title))
+
+            print(all_books.total)
             results = [
                 {
                     'id': book.id,
@@ -35,7 +38,7 @@ def bookish_routes(app):
                     'total': book.total,
                     'available': book.available
                 } for book in all_books]
-            return {"books": results}
+            return {"books": results ,"total": all_books.total}
 
     @app.route('/book/<id>', methods=['GET'])
     @jwt_required()
