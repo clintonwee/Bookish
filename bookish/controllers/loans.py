@@ -51,6 +51,7 @@ def loan_routes(app):
             user = User.query.get(user_id)
             loans = user.books
             return [{
+                "book_id": loan.book_id,
                 "title": loan.book.title,
                 "author": loan.book.author,
                 "genre": loan.book.genre,

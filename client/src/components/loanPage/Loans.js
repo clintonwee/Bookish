@@ -5,13 +5,13 @@ import useToken from "../../utils/useToken"
 
 
 const Loans = () => {
-    const {prepareHeaders} = useToken()
+    const {prepareHeaders, getProfile} = useToken()
     const [loans, setLoans] = useState([]);
     useEffect(() => {
         async function fetchData(){
+            const profile = await getProfile()
             const headers = prepareHeaders()
-            const res = await axios.get(`/loan/user/1`, headers)
-            console.log(res)
+            const res = await axios.get(`/loan/user/${profile.id}`, headers)
             setLoans(res.data)
         }
         fetchData()

@@ -12,7 +12,6 @@ const LoginPage = () => {
     useEffect(() => {
         async function checkLoggedIn(){
             const res = await getProfile()
-            console.log(res)
             if(res.status !== "error"){
                 navigate("/home")
             }
@@ -31,11 +30,10 @@ const LoginPage = () => {
         const res = await axios.post("/login", newUser)
         if (res.data.status === 'success') {
             setToken(res.data.access_token)
-            console.log("GOING HOME")
             navigate("/home")
         } else {
             console.log(res)
-            alert("An error has occurred")
+            alert("Incorrect password given")
         }
     }
 
