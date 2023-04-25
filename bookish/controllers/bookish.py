@@ -1,7 +1,7 @@
 from flask import request
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from bookish.models.example import Book
+from bookish.models.example import Book, User
 from bookish.models import db
 from flask_login import login_required
 
@@ -57,14 +57,16 @@ def bookish_routes(app):
     @jwt_required()
     def create_book():
         if request.method == 'POST':
-            if request.is_json:
+            email = get_jwt_identity()
+            user = User.query.filter_by(email=email).first()
+            if user.isAdmin:
                 data = request.get_json()
                 new_book = Book(title=data['title'], author=data['author'], genre=data['genre'], isbn=data['isbn'], total=data['total'], available=data['available'])
                 db.session.add(new_book)
                 db.session.commit()
-                return {"message": "New book has been created successfully."}
+                return {"status": "success", "message": "New book has been created successfully."}
             else:
-                return {"error": "The request payload is not in JSON format"}
+                return {"status": "error", "message": "You are not authorized to create books"}
 
     @app.route('/book/<id>', methods=['PUT'])
     @jwt_required()

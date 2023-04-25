@@ -57,7 +57,8 @@ def user_routes(app):
                     'first_name': user.first_name,
                     'last_name': user.last_name,
                     'age': user.age,
-                    'email': user.email
+                    'email': user.email,
+                    'isAdmin': user.isAdmin,
                 } for user in all_users]
             return {"users": results}
 
@@ -79,6 +80,7 @@ def user_routes(app):
                     'last_name': user.last_name,
                     'age': user.age,
                     'email': user.email,
+                    'isAdmin': user.isAdmin,
                     'loans': loans
                 }
             return {"user": result}

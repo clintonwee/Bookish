@@ -1,13 +1,25 @@
 import {useLocation, useNavigate} from 'react-router-dom'
 import {RiLogoutBoxRLine} from "react-icons/ri"
 import useToken from "../../utils/useToken"
+import {HiPlus} from "react-icons/hi"
 
 import axios from "axios";
+import {useEffect, useState} from "react";
 
 const Navbar = () => {
-    const {prepareHeaders, removeToken} = useToken()
+    const {prepareHeaders, removeToken, getProfile} = useToken()
+    const [isAdmin, setIsAdmin] = useState(false)
     const location = useLocation()
     const navigate = useNavigate()
+
+    useEffect(() => {
+        async function prepareProfile() {
+            const profile = await getProfile()
+            setIsAdmin(profile.isAdmin)
+        }
+
+        prepareProfile()
+    }, [])
     const logout = async () => {
         const headers = prepareHeaders()
         const res = await axios.post("/logout", {}, headers)
@@ -18,8 +30,8 @@ const Navbar = () => {
     }
 
     const navPages = [
-        { url: "/home", name: "Home" },
-        { url: "/loans", name: "Loans" }
+        {url: "/home", name: "Home"},
+        {url: "/loans", name: "Loans"},
     ]
 
     return (
@@ -50,6 +62,13 @@ const Navbar = () => {
                                    aria-current="page">{page.name}</a>
                             </li>
                         ))}
+                        {isAdmin && <li>
+                            <a href="/create"
+                                    className="border border-blue-500 hover:bg-blue-100 text-blue-500 px-4 rounded-lg py-2"
+                                    aria-current="page"><HiPlus className="inline mr-1"/>Add Book
+                            </a>
+                        </li>}
+
                         <li>
                             <button onClick={logout}
                                     className="border border-red-500 hover:bg-red-100 text-red-500 px-4 rounded-lg py-2"

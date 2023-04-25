@@ -8,6 +8,7 @@ import LoanPage from "./loanPage/LoanPage";
 import RegisterPage from "./registerPage/RegisterPage";
 import SuccessRegister from "./registerPage/SuccessRegister";
 import ProtectedRoutes from "./Layout/ProtectedRoutes";
+import CreatePage from "./createPage/CreatePage";
 
 export default function App() {
     const apiService = new ApiService()
@@ -35,6 +36,7 @@ export default function App() {
                     <Route path="login" element={<LoginPage/>}/>
                     <Route path="loans" element={<LoanPage/>}/>
                     <Route path="register" element={<RegisterPage/>}/>
+                    <Route path="/create" element={<CreatePage/>}/>
                     <Route path="register/success" element={<SuccessRegister/>}/>
                 </Routes>
             </ProtectedRoutes>
