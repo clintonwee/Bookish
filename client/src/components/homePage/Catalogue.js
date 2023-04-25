@@ -6,12 +6,10 @@ import ConfirmModal from "../modals/ConfirmModal";
 import ReturnModal from "../modals/ReturnModal";
 import UnavailableModal from "../modals/UnavailableModal";
 
-const Catalogue = () => {
+const Catalogue = ({books, fetchData}) => {
     const {token, prepareHeaders, getProfile} = useToken();
-    const [books, setBooks] = useState([]);
     const [loans, setLoans] = useState([])
     const [loansLoading, setLoansLoading] = useState(false)
-    const [borrowedBookIds, setBorrowedBookIds] = useState([])
 
     const fetchLoans = async (id) => {
         setLoansLoading(true)
@@ -21,40 +19,14 @@ const Catalogue = () => {
         setLoansLoading(false)
     }
 
-    const fetchData = async () => {
-        const headers = prepareHeaders()
-        const profile = await getProfile()
-
-        const resLoans = await axios.get(`/loan/user/${profile.id}`, headers)
-        const bookIds = resLoans.data.map((loan) => loan.book_id)
-        const loanIds = resLoans.data.map((loan) => loan.id)
-
-
-        const resBooks = await axios.get("/books", headers)
-        const books = resBooks.data.books.map((book) => {
-            const index = bookIds.indexOf(book.id)
-            if (index != -1) {
-                book.borrowed = true;
-                book.loan_id = loanIds[index];
-            } else {
-                book.borrowed = false
-                book.loan_id = -1
-            }
-            return book;
-        })
-
-        setBooks(resBooks.data.books)
-    }
-
-    useEffect(() => {
-        fetchData()
-    }, [])
-
     return (
         <div className="relative overflow-x-auto flex justify-center">
-            <table className="w-full md:w-3/4 text-sm text-left text-gray-500 dark:text-gray-400">
+            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
+                    <th scope="col" className="px-6 py-3">
+                        No.
+                    </th>
                     <th scope="col" className="px-6 py-3">
                         Title
                     </th>
@@ -71,6 +43,9 @@ const Catalogue = () => {
                 <tbody>
                 {books.map((book, index) => (
                     <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <td className="px-6 py-4">
+                            {index + 1}
+                        </td>
                         <th scope="row"
                             className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             {book.title}

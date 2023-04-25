@@ -26,6 +26,9 @@ const Loans = () => {
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th scope="col" className="px-6 py-3">
+                        No.
+                    </th>
+                    <th scope="col" className="px-6 py-3">
                         Title
                     </th>
                     <th scope="col" className="px-6 py-3">
@@ -44,6 +47,10 @@ const Loans = () => {
                 <tbody>
                 {loans.map((loan, index) => (
                     <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <th scope="px-6 py-4"
+                            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {index + 1}
+                        </th>
                         <th scope="row"
                             className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             {loan.title}
@@ -58,7 +65,7 @@ const Loans = () => {
                             {formatDate(loan.due_date)}
                         </td>
                         <td className="px-6 py-4">
-                            <ReturnModal author={loan.author} title={loan.title} id={loan.id} refetch={fetchData} />
+                            <ReturnModal author={loan.author} title={loan.title} id={loan.id} refetch={fetchData}/>
                         </td>
                     </tr>
                 ))}

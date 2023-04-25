@@ -14,7 +14,17 @@ def bookish_routes(app):
     @jwt_required()
     def get_all_books():
         if request.method == 'GET':
-            all_books = Book.query.all()
+            args = request.args
+            search_param = args.get("search")
+
+            print(search_param)
+            all_books = None
+            if search_param:
+                print("Filtering by params")
+                all_books = Book.query.filter(Book.title.ilike('%{}%'.format(search_param)) | Book.author.ilike('%{}%'.format(search_param)))
+            else:
+                print("Query all")
+                all_books = Book.query.all()
             results = [
                 {
                     'id': book.id,

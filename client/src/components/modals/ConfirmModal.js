@@ -44,7 +44,7 @@ const ConfirmModal = ({title, author, id, refetch}) => {
                         <h3 className="text-lg leading-6 font-medium text-gray-900">Confirmation</h3>
                         <div className="mt-2 px-7 py-3">
                             <p className="text-sm text-gray-500">
-                                Are you sure you wish to borrow {title} by {author}?
+                                Are you sure you wish to borrow <span className="font-bold">{title}</span> by <span className="font-bold">{author}</span>?
                             </p>
                         </div>
                         <div className="items-center px-4 py-3">
